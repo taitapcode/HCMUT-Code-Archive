@@ -70,51 +70,82 @@ public:
 
   void add(T e) override
   {
-    (void)e;
-    throw logic_error("TODO Q1: SLinkedList::add");
+    Node* newNode = new Node(e, tail);
+    tail->next->next = newNode;
+    tail->next = newNode;
+    count++;
   }
 
   void add(int index, T e) override
   {
-    // TODO Q1
-    (void)index;
-    (void)e;
-    throw logic_error("TODO Q1: SLinkedList::add(index, e)");
+    if (index < 0 || index > count) throw out_of_range("SLinkedList::add(index, e) index out of range");
+
+    Node* prev = head;
+    for (int i = 0; i < index; i++) prev = prev->next;
+
+    Node* newNode = new Node(e, prev->next);
+    prev->next = newNode;
+
+    if (index == count) tail->next = newNode;
+
+    count++;
   }
 
   T removeAt(int index) override
   {
-    // TODO Q1
-    (void)index;
-    throw logic_error("TODO Q1: SLinkedList::removeAt");
+    if (index < 0 || index >= count) throw out_of_range("SLinkedList::removeAt(index) index out of range");
+
+    Node* prev = head;
+    for (int i = 0; i < index; i++) prev = prev->next;
+
+    Node* removedNode = prev->next;
+    T removedData = removedNode->data;
+
+    prev->next = removedNode->next;
+
+    count--;
+    if (index == count) tail->next = prev;
+
+    delete removedNode;
+    return removedData;
   }
 
   bool removeItem(T item, void (*removeItemData)(T) = 0) override
   {
-    // TODO Q1
-    (void)item;
-    (void)removeItemData;
-    throw logic_error("TODO Q1: SLinkedList::removeItem");
+    int index = indexOf(item);
+    if (index == -1) return false;
+
+    T removedData = removeAt(index);
+    if (removeItemData != 0) removeItemData(removedData);
+
+    return true;
   }
 
   void clear() override
   {
-    // TODO Q1
-    throw logic_error("TODO Q1: SLinkedList::clear");
+    removeInternalData();
+    head->next = tail;
+    tail->next = head;
+    count = 0;
   }
 
   T& get(int index) override
   {
-    // TODO Q1
-    (void)index;
-    throw logic_error("TODO Q1: SLinkedList::get");
+    if (index < 0 || index >= count) throw out_of_range("SLinkedList::get(index) index out of range");
+
+    Node* curr = head->next;
+    for (int i = 0; i < index; i++) curr = curr->next;
+
+    return curr->data;
   }
 
   int indexOf(T item) override
   {
-    // TODO Q1
-    (void)item;
-    throw logic_error("TODO Q1: SLinkedList::indexOf");
+    int index = 0;
+    for (Node* cur = head->next; cur != tail; cur = cur->next, ++index)
+      if (equals(cur->data, item, itemEqual)) return index;
+
+    return -1;
   }
 
   bool empty() override { return count == 0; }

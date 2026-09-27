@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL := bash
 
 CXX := g++
 CXXFLAGS := -std=c++17 -Wall -Wextra -pedantic -I.
