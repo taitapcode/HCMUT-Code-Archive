@@ -116,7 +116,7 @@ public:
     if (index == -1) return false;
 
     T removedData = removeAt(index);
-    if (removeItemData != 0) removeItemData(removedData);
+    if (removeItemData) removeItemData(removedData);
 
     return true;
   }

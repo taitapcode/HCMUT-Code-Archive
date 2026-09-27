@@ -50,52 +50,108 @@ public:
 
   void add(T e) override
   {
-    // TODO Q2
-    (void)e;
-    throw logic_error("TODO Q2: CircularLinkedList::add");
+    if (count == 0)
+    {
+      head = tail = new Node(e);
+      head->next = head;
+    }
+    else
+      tail = tail->next = new Node(e, head);
+
+    count++;
   }
 
   void add(int index, T e) override
   {
-    // TODO Q2
-    (void)index;
-    (void)e;
-    throw logic_error("TODO Q2: CircularLinkedList::add(index, e)");
+    if (index < 0 || index > count) throw out_of_range("CircularLinkedList::add(index, e) index out of range");
+
+    if (index == count) return add(e);
+    if (index == 0)
+    {
+      Node* newNode = new Node(e, head);
+      tail->next = head = newNode;
+    }
+    else
+    {
+      Node* prev = head;
+      for (int i = 1; i < index; i++) prev = prev->next;
+
+      Node* newNode = new Node(e, prev->next);
+      prev->next = newNode;
+    }
+
+    count++;
   }
 
   T removeAt(int index) override
   {
-    // TODO Q2
-    (void)index;
-    throw logic_error("TODO Q2: CircularLinkedList::removeAt");
+    if (index < 0 || index >= count) throw out_of_range("CircularLinkedList::removeAt(index) index out of range");
+
+    if (count == 1)
+    {
+      T removedData = head->data;
+      delete head;
+      head = tail = nullptr;
+      count--;
+      return removedData;
+    }
+
+    if (index == 0)
+    {
+      Node* removedNode = head;
+      T removedData = removedNode->data;
+      head = head->next;
+      tail->next = head;
+      delete removedNode;
+      count--;
+      return removedData;
+    }
+
+    Node* prev = head;
+    for (int i = 0; i < index - 1; i++) prev = prev->next;
+
+    Node* removedNode = prev->next;
+    T removedData = prev->next->data;
+    prev->next = removedNode->next;
+
+    if (index == count - 1) tail = prev;
+
+    delete removedNode;
+    count--;
+    return removedData;
   }
 
   bool removeItem(T item, void (*removeItemData)(T) = 0) override
   {
-    // TODO Q2
-    (void)item;
-    (void)removeItemData;
-    throw logic_error("TODO Q2: CircularLinkedList::removeItem");
+    int index = indexOf(item);
+    if (index == -1) return false;
+
+    T removedData = removeAt(index);
+    if (removeItemData) removeItemData(removedData);
+
+    return true;
   }
 
   void clear() override
   {
-    // TODO Q2
-    throw logic_error("TODO Q2: CircularLinkedList::clear");
+    removeInternalData();
   }
 
   T& get(int index) override
   {
-    // TODO Q2
-    (void)index;
-    throw logic_error("TODO Q2: CircularLinkedList::get");
+    if (index < 0 || index >= count) throw out_of_range("CircularLinkedList::get(index) index out of range");
+    Node* curr = head;
+    for (int i = 0; i < index; i++) curr = curr->next;
+
+    return curr->data;
   }
 
   int indexOf(T item) override
   {
-    // TODO Q2
-    (void)item;
-    throw logic_error("TODO Q2: CircularLinkedList::indexOf");
+    Node* curr = head;
+    for (int i = 0; i < count; i++, curr = curr->next)
+      if (equals(curr->data, item, itemEqual)) return i;
+    return -1;
   }
 
   bool empty() override { return count == 0; }
