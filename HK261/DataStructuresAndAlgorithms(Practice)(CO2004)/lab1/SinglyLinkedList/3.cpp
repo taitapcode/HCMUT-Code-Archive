@@ -52,35 +52,59 @@ T SLinkedList<T>::removeAt(int index)
 {
   if (index < 0 || index >= count) throw std::out_of_range("Index is out of range");
 
-  Node dummy(-1, head);
-  Node* temp = dummy.next;
-  for (int i = 0; i < index - 1; i++) temp = temp->next;
+  Node* deletedNode = nullptr;
+  T deletedData;
 
-  Node* deleteNode = temp->next;
-  T data = deleteNode->data;
+  if (index == 0)
+  {
+    deletedNode = head;
+    head = head->next;
+    deletedData = deletedNode->data;
 
-  temp->next = deleteNode->next;
-  delete deleteNode;
+    if (count == 1) tail = nullptr;
+  }
+  else
+  {
+    Node* prev = head;
+    for (int i = 0; i < index - 1; i++) prev = prev->next;
 
-  return data;
+    deletedNode = prev->next;
+    deletedData = deletedNode->data;
+    prev->next = deletedNode->next;
+
+    if (index == count - 1) tail = prev;
+  }
+
+  delete deletedNode;
+  count--;
+  return deletedData;
 }
 
 template <class T>
 bool SLinkedList<T>::removeItem(const T& item)
 {
   Node* temp = head;
-  while (temp != nullptr)
-  {
-    if (temp->data == item)
+
+  for (int i = 0; i < count; i++, temp = temp->next)
+    if (item == temp->data)
     {
-      removeAt(indexOf(item));
+      removeAt(i);
       return true;
     }
-    temp = temp->next;
-  }
+
+  return false;
 }
 
 template <class T>
 void SLinkedList<T>::clear()
 {
+  while (head != nullptr)
+  {
+    Node* nextNode = head->next;
+    delete head;
+    head = nextNode;
+  }
+
+  tail = nullptr;
+  count = 0;
 }
