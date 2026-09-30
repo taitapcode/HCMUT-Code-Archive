@@ -38,39 +38,30 @@ public:
 
 void LinkedList::partition(int k)
 {
-  Node *lower = nullptr, *equal = nullptr, *higher = nullptr;
-  Node *curr = head, *currLower = nullptr, *currEqual = nullptr, *currHigher = nullptr;
-  while (curr != nullptr)
-  {
-    if (curr->value < k)
-    {
-      if (!lower)
-        currLower = lower = curr;
-      else
-        currLower = currLower->next = curr;
-    }
-    else if (curr->value == k)
-    {
-      if (!equal)
-        currEqual = equal = curr;
-      else
-        currEqual = currEqual->next = curr;
-    }
-    else
-    {
-      if (higher == nullptr)
-        currHigher = higher = curr;
-      else
-        currHigher = currHigher->next = curr;
-    }
+  if (!head || !head->next) return;
 
-    curr = curr->next;
+  Node dummyLess(0), dummyEqual(0), dummyGreater(0);
+  Node *tailLess = &dummyLess, *tailEqual = &dummyEqual, *tailGreater = &dummyGreater;
+
+  Node* curr = head;
+  while (curr)
+  {
+    Node* nextNode = curr->next;
+    curr->next = nullptr;
+
+    if (curr->value < k)
+      tailLess = tailLess->next = curr;
+    else if (curr->value == k)
+      tailEqual = tailEqual->next = curr;
+    else
+      tailGreater = tailGreater->next = curr;
+
+    curr = nextNode;
   }
 
-  if (equal) currLower->next = equal;
-  equal->next = higher;
-  currHigher->next = nullptr;
+  tailEqual->next = dummyGreater.next;
+  tailLess->next = dummyEqual.next ? dummyEqual.next : dummyGreater.next;
 
-  head = lower;
-  tail = currHigher;
+  head = dummyLess.next ? dummyLess.next : (dummyEqual.next ? dummyEqual.next : dummyGreater.next);
+  tail = (tailGreater != &dummyGreater) ? tailGreater : (tailEqual != &dummyEqual ? tailEqual : tailLess);
 }
