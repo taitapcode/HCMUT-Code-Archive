@@ -18,34 +18,50 @@ public:
 
   void sort(T array[], int size, int (*comparator)(T&, T&) = 0) override
   {
-    // TODO Q4
-    (void)array;
-    (void)size;
-    (void)comparator;
-    throw logic_error("TODO Q4: QuickSort::sort");
+    if (array == nullptr || size <= 1) return;
+    quickSort(array, 0, size - 1, comparator);
   }
 
 private:
+  int compare(T& a, T& b, int (*comparator)(T&, T&))
+  {
+    if (comparator) return comparator(a, b);
+    return SortSimpleOrder<T>::compare4Ascending(a, b);
+  }
+
   void quickSort(T array[], int left, int right,
                  int (*comparator)(T&, T&) = 0)
   {
-    // TODO Q4
-    (void)array;
-    (void)left;
-    (void)right;
-    (void)comparator;
-    throw logic_error("TODO Q4: QuickSort::quickSort");
+    if (left >= right) return;
+    int partitionIndex = partition(array, left, right, comparator);
+    quickSort(array, left, partitionIndex, comparator);
+    quickSort(array, partitionIndex + 1, right, comparator);
   }
 
   int partition(T array[], int left, int right,
                 int (*comparator)(T&, T&) = 0)
   {
-    // TODO Q4
-    (void)array;
-    (void)left;
-    (void)right;
-    (void)comparator;
-    throw logic_error("TODO Q4: QuickSort::partition");
+    int pivotIdx = left + (right - left) / 2;
+    if (pivotSelection) pivotIdx = left + pivotSelection(&array[left], right - left + 1);
+    std::swap(array[left], array[pivotIdx]);
+    T pivotValue = array[left];
+
+    int i = left - 1, j = right + 1;
+    while (true)
+    {
+      do
+      {
+        i++;
+      } while (compare(array[i], pivotValue, comparator) < 0);
+
+      do
+      {
+        j--;
+      } while (compare(array[j], pivotValue, comparator) > 0);
+
+      if (i >= j) return j;
+      std::swap(array[i], array[j]);
+    }
   }
 };
 
