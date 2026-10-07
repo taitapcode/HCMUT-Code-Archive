@@ -63,7 +63,7 @@ public:
 
   void add(int index, T e) override
   {
-    if (index < 0 || index > count) throw out_of_range("CircularLinkedList::add(index, e) index out of range");
+    if (index < 0 || index > count) throw out_of_range("add index out of range");
 
     if (index == count) return add(e);
     if (index == 0)
@@ -85,7 +85,7 @@ public:
 
   T removeAt(int index) override
   {
-    if (index < 0 || index >= count) throw out_of_range("CircularLinkedList::removeAt(index) index out of range");
+    if (index < 0 || index >= count) throw out_of_range("remove index out of range");
 
     if (count == 1)
     {
@@ -139,7 +139,7 @@ public:
 
   T& get(int index) override
   {
-    if (index < 0 || index >= count) throw out_of_range("CircularLinkedList::get(index) index out of range");
+    if (index < 0 || index >= count) throw out_of_range("get index out of range");
     Node* curr = head;
     for (int i = 0; i < index; i++) curr = curr->next;
 

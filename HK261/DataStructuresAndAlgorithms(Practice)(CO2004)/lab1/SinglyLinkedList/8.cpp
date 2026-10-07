@@ -61,10 +61,7 @@ void Polynomial::insertTerm(double coeff, int exp)
     {
       curr.coeff += coeff;
       terms->removeAt(i);
-      if (curr.coeff != 0)
-      {
-        terms->add(i, curr);
-      }
+      if (curr.coeff != 0) terms->add(i, curr);
       return;
     }
     else if (curr.exp < exp)

@@ -16,10 +16,7 @@ int BKMove::getRouteCount() const
 
 BusRoute* BKMove::getRoute(int index)
 {
-  if (index < 0 || index >= static_cast<int>(routes.size()))
-  {
-    throw out_of_range("BKMove route index is out of range");
-  }
+  if (index < 0 || index >= static_cast<int>(routes.size())) throw out_of_range("route index is out of range");
   return routes[index];
 }
 
@@ -110,12 +107,9 @@ vector<JourneyResult> BKMove::findJourneys(string fromStopId, string toStopId)
           for (Direction d2 : {OUTBOUND, INBOUND})
           {
             int hops2 = route2->getHopCount(transferStopId, toStopId, d2);
-            if (hops2 > 0)
-            {
-              journeys.push_back(JourneyResult(
-                  route1->getId(), d1, transferStopId,
-                  route2->getId(), d2, hops1 + hops2));
-            }
+            if (hops2 > 0) journeys.push_back(JourneyResult(
+                route1->getId(), d1, transferStopId,
+                route2->getId(), d2, hops1 + hops2));
           }
         }
       }

@@ -78,7 +78,7 @@ public:
 
   void add(int index, T e) override
   {
-    if (index < 0 || index > count) throw out_of_range("SLinkedList::add(index, e) index out of range");
+    if (index < 0 || index > count) throw out_of_range("add index out of range");
 
     Node* prev = head;
     for (int i = 0; i < index; i++) prev = prev->next;
@@ -93,7 +93,7 @@ public:
 
   T removeAt(int index) override
   {
-    if (index < 0 || index >= count) throw out_of_range("SLinkedList::removeAt(index) index out of range");
+    if (index < 0 || index >= count) throw out_of_range("remove index out of range");
 
     Node* prev = head;
     for (int i = 0; i < index; i++) prev = prev->next;
@@ -131,7 +131,7 @@ public:
 
   T& get(int index) override
   {
-    if (index < 0 || index >= count) throw out_of_range("SLinkedList::get(index) index out of range");
+    if (index < 0 || index >= count) throw out_of_range("get index out of range");
 
     Node* curr = head->next;
     for (int i = 0; i < index; i++) curr = curr->next;

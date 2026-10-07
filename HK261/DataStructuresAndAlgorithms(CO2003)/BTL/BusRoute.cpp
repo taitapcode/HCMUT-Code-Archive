@@ -24,14 +24,14 @@ int BusRoute::getStopCount(Direction direction)
 
 int BusRoute::physicalIndex(int index, Direction direction)
 {
-  if (!built || index < 0 || index >= getStopCount(direction)) throw out_of_range("BusRoute::physicalIndex: index out of range");
+  if (!built || index < 0 || index >= getStopCount(direction)) throw out_of_range("physicalIndex index out of range");
   if (direction == OUTBOUND) return index;
   return (outboundCount - 1 + index) % stops.size();
 }
 
 BusStop& BusRoute::getStop(int index, Direction direction)
 {
-  if (!built || index < 0 || index >= getStopCount(direction)) throw out_of_range("BusRoute::getStop: index out of range");
+  if (!built || index < 0 || index >= getStopCount(direction)) throw out_of_range("getStop index out of range");
 
   return stops.get(physicalIndex(index, direction));
 }
