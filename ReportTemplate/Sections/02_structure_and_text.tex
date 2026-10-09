@@ -1,0 +1,36 @@
+\section{Cấu trúc văn bản và Định dạng cơ bản}
+\label{sec:structure}
+
+\subsection{Các cấp tiêu đề phân mục}
+Template hỗ trợ đánh chỉ số mục tự động tới 4 cấp, phù hợp cho các báo cáo kỹ thuật chuyên sâu:
+\begin{enumerate}
+    \item \textbf{Cấp 1}: \texttt{\textbackslash section\{...\}}
+    \item \textbf{Cấp 2}: \texttt{\textbackslash subsection\{...\}}
+    \item \textbf{Cấp 3}: \texttt{\textbackslash subsubsection\{...\}}
+    \item \textbf{Cấp 4}: \texttt{\textbackslash subsubsubsection\{...\}} (Tùy biến riêng trong gói \texttt{hcmut.sty})
+\end{enumerate}
+
+\subsubsection{Ví dụ về tiêu đề cấp 3 (Subsubsection)}
+Đây là đoạn văn bản minh họa cấp mục thứ 3. Khoảng cách dòng được cố định ở mức $1.5$ dòng, khoảng cách giữa các đoạn (\texttt{parskip}) là $6\text{pt}$ nhằm tạo không gian đọc thoáng đãng.
+
+\subsubsubsection{Ví dụ về tiêu đề cấp 4 (Subsubsubsection)}
+Đây là tiêu đề cấp 4 với ký hiệu chữ cái phụ thuộc vào cấp 3 đứng trước. Cấp này rất hữu ích khi phân tích các trường hợp con hoặc các tham số kỹ thuật chi tiết.
+
+\subsection{Định dạng chữ, ghi chú và danh sách}
+Văn bản hỗ trợ đầy đủ các kiểu nhấn mạnh: \textbf{in đậm (bold)}, \textit{in nghiêng (italic)}, \underline{gạch chân (underline)}, và đoạn trích dẫn ngắn.
+
+Bạn có thể chèn ghi chú chân trang dễ dàng\footnote{Đây là một chú thích dưới chân trang (footnote) nhằm giải thích thuật ngữ mà không làm gián đoạn mạch đọc chính.}.
+
+\subsubsection{Danh sách lồng nhau}
+\begin{itemize}
+    \item \textbf{Nhóm tính năng cốt lõi}:
+    \begin{enumerate}
+        \item Xử lý ràng buộc cứng: Không trùng ca, không vượt công suất phòng.
+        \item Xử lý ràng buộc mềm: Tối thiểu hóa độ mệt mỏi (\textit{Fatigue Penalty}).
+    \end{enumerate}
+    \item \textbf{Các ràng buộc mở rộng}:
+    \begin{itemize}
+        \item Hạn chế chuyển cơ sở giữa hai ca thi liền kề.
+        \item Đảm bảo phân bổ khối lượng công việc công bằng (Fairness index).
+    \end{itemize}
+\end{itemize}

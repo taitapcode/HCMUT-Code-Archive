@@ -1,0 +1,30 @@
+\section{Kết luận và Tài liệu tham khảo}
+\label{sec:conclusion}
+
+Mẫu báo cáo này cung cấp nền tảng chuẩn mực, giải quyết toàn bộ các vấn đề hiển thị tiếng Việt, giao diện mã nguồn và định dạng bảng biểu theo phong cách khoa học. Khi bắt đầu viết một bài báo cáo mới, bạn chỉ cần giữ nguyên file cấu hình \texttt{hcmut.sty} và trang bìa \texttt{Sections/00\_title.tex}, sau đó tùy biến nội dung các chương trong thư mục \texttt{Sections/}.
+
+Các đối tượng trong báo cáo đều có thể được tham chiếu chéo nhanh chóng:
+\begin{itemize}
+    \item Công thức toán học: Phương trình~\eqref{eq:objective} và hệ ràng buộc~\eqref{eq:capacity}--\eqref{eq:binary}.
+    \item Bảng đối sánh dữ liệu: Bảng~\ref{tab:comparison} và Bảng~\ref{tab:complex}.
+    \item Hình ảnh và sơ đồ: Hình~\ref{fig:pipeline} và Hình~\ref{fig:subfigures_demo}.
+    \item Thuật toán và mã nguồn: Thuật toán~\ref{algo:greedy_iap} cùng Mã nguồn~\ref{lst:python_solver}.
+    \item Trích dẫn học thuật: Sử dụng lệnh \texttt{\textbackslash cite} như nghiên cứu của Wolsey~\cite{wolsey1999integer}, tài liệu Knuth~\cite{knuth1984texbook}, hoặc bộ công cụ OR-Tools~\cite{ortools}.
+\end{itemize}
+
+\begin{thebibliography}{99}
+\bibitem{knuth1984texbook}
+Donald~E. Knuth,
+\textit{The \TeX book},
+Addison-Wesley, Reading, Massachusetts, 1984.
+
+\bibitem{wolsey1999integer}
+Laurence~A. Wolsey,
+\textit{Integer Programming},
+John Wiley \& Sons, New York, 1998.
+
+\bibitem{ortools}
+Google Developers,
+\textit{Google OR-Tools: Optimization Suite for Python, C++, Java, and .NET},
+2024. \url{https://developers.google.com/optimization}.
+\end{thebibliography}

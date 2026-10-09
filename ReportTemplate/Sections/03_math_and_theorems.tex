@@ -1,0 +1,56 @@
+\section{Biểu diễn Toán học và Các môi trường Khẳng định}
+\label{sec:math}
+
+\subsection{Công thức Toán học đa dòng và Ma trận}
+Phương trình toán học có thể hiển thị nội dòng như $f(x) = \sum_{i=1}^n w_i \cdot x_i$ hoặc hiển thị độc lập có đánh số tự động:
+
+\begin{equation}
+\label{eq:objective}
+\min \quad Z = \alpha \sum_{i \in I} \sum_{j \in J} c_{i,j} x_{i,j} + \beta \sum_{i \in I} d_i^+ + \gamma \sum_{i \in I} d_i^-
+\end{equation}
+
+Hệ phương trình nhiều dòng căn chỉnh theo dấu bằng sử dụng môi trường \texttt{align}:
+\begin{align}
+\sum_{i \in I} x_{i,j} &= R_j, \quad \forall j \in J \label{eq:capacity}\\
+x_{i,j} + x_{i,k} &\le 1, \quad \forall (j, k) \in \mathcal{O}, \, \forall i \in I \label{eq:overlap}\\
+x_{i,j} &\in \{0, 1\}, \quad \forall i \in I, \, \forall j \in J \label{eq:binary}
+\end{align}
+
+Biểu diễn ma trận hệ số và hàm phân nhánh:
+\begin{equation}
+\mathbf{A} = \begin{bmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{bmatrix}, \quad
+\text{với } \phi(t) = \begin{cases}
+1 & \text{nếu } t \ge 0, \\
+0 & \text{ngược lại.}
+\end{cases}
+\end{equation}
+
+\subsection{Hệ thống Định lý, Bổ đề và Mệnh đề}
+
+\begin{definition}[Tập ca thi xung đột]
+Hai ca thi $j_1, j_2 \in J$ được gọi là xung đột (overlap) khi và chỉ khi khoảng thời gian diễn ra của chúng giao nhau thực sự:
+$[S_{j_1}, E_{j_1}] \cap [S_{j_2}, E_{j_2}] \neq \emptyset$.
+\end{definition}
+
+\begin{theorem}[Độ phức tạp bài toán gán ca thi]
+\label{thm:np_hard}
+Bài toán tối ưu hóa phân công cán bộ coi thi với các ràng buộc cứng về thời gian và sức chứa phòng thi là một bài toán NP-khó (\textit{NP-hard}).
+\end{theorem}
+
+\begin{lemma}[Bổ đề cận trên số biến nhị phân]
+\label{lem:binary_bound}
+Với $|I|$ cán bộ và $|J|$ ca thi, số lượng biến quyết định nhị phân tối đa cần khởi tạo cho mô hình Quy hoạch nguyên (ILP) là $|I| \times |J|$.
+\end{lemma}
+
+\begin{proof}
+Mỗi biến $x_{i,j}$ tương ứng với một cặp (cán bộ $i$, ca thi $j$). Do đó không gian biến là tích Descartes $I \times J$, có lực lượng đúng bằng $|I| \cdot |J|$.
+\end{proof}
+
+\begin{property}[Tính ổn định của hàm mục tiêu Min-Max]
+Khi thay thế hàm mục tiêu khoảng cách tuyệt đối $L_1$ bằng biến phụ trợ $t = \max_i \{W_i\}$, mô hình tuyến tính hóa bảo toàn tính lồi của vùng chấp nhận được.
+\end{property}

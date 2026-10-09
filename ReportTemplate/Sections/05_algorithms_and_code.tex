@@ -1,0 +1,79 @@
+\section{Biểu diễn Thuật toán và Mã nguồn}
+\label{sec:algo_code}
+
+\subsection{Trình bày Thuật toán dạng Mã giả (Algorithm2e)}
+Thuật toán~\ref{algo:greedy_iap} minh họa việc sử dụng gói \texttt{algorithm2e} với các từ khóa đã được Việt hóa tự động (\textbf{Đầu vào}, \textbf{Đầu ra}, \textbf{Trả về}):
+
+\begin{algorithm}[H]
+\caption{Thuật toán gán ca thi Heuristic cơ bản}
+\label{algo:greedy_iap}
+\LinesNumbered
+\KwIn{Tập hợp cán bộ $I$, danh sách ca thi $J$ đã sắp xếp theo thời gian bắt đầu}
+\KwOut{Lịch phân công hợp lệ $M \subseteq I \times J$}
+
+$M \leftarrow \emptyset$\;
+\ForEach{$j \in J$}{
+    $k \leftarrow 0$\;
+    \ForEach{$i \in I$}{
+        \If{$i$ không trùng lịch với ca $j$ \textbf{và} $k < \text{Capacity}(j)$}{
+            $M \leftarrow M \cup \{(i, j)\}$\;
+            $k \leftarrow k + 1$\;
+        }
+    }
+    \If{$k < \text{Capacity}(j)$}{
+        \KwRet{\text{Không tìm thấy nghiệm khả thi}}\;
+    }
+}
+\KwRet{$M$}\;
+\end{algorithm}
+
+\subsection{Khối Mã nguồn (Code Listings)}
+Khối mã nguồn sử dụng theme \textbf{Academic / GitHub Light} đã tinh chỉnh: viền mảnh tinh tế, số dòng nằm ngay ngắn trong khung, phông chữ monospace rõ ràng và màu sắc tương phản trang nhã.
+
+\subsubsection{Ví dụ Mã nguồn Python}
+Mã nguồn~\ref{lst:python_solver} minh họa hàm xây dựng ràng buộc và tính điểm mệt mỏi trong Python:
+
+\begin{lstlisting}[language=Python, caption={Hàm kiểm tra trùng lịch và tính phạt mệt mỏi trong Python}, label={lst:python_solver}]
+from typing import List, Tuple
+
+def evaluate_schedule(assignments: List[Tuple[int, int]], soft_weights: List[float]) -> float:
+    """
+    Tinh toan tong chi phi phat dua tren bo trong so mem (*@\textit{(soft weights)}@*).
+    """
+    w_dist, w_consec, w_fair = soft_weights
+    total_penalty = 0.0
+
+    # Kiem tra ca thi lien tiep
+    consecutive_shifts = count_consecutive(assignments)
+    total_penalty += consecutive_shifts * w_consec
+
+    # Kiem tra chenh lech tai cong viec (*@$L_1$ norm@*)
+    imbalance = calculate_workload_variance(assignments)
+    total_penalty += imbalance * w_fair
+
+    return round(total_penalty, 4)
+\end{lstlisting}
+
+\subsubsection{Ví dụ Mã nguồn C/C++}
+Bạn cũng có thể chỉ định bất kỳ ngôn ngữ nào khác như C (Mã nguồn~\ref{lst:c_matrix}):
+
+\begin{lstlisting}[language=C, caption={Khởi tạo ma trận chi phí trong ngôn ngữ C}, label={lst:c_matrix}]
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_INVIGILATORS 100
+#define MAX_SESSIONS 50
+
+int main(void) {
+    int cost_matrix[MAX_INVIGILATORS][MAX_SESSIONS];
+    
+    // Khoi tao ma tran trong so mac dinh
+    for (int i = 0; i < MAX_INVIGILATORS; ++i) {
+        for (int j = 0; j < MAX_SESSIONS; ++j) {
+            cost_matrix[i][j] = (i == j) ? 0 : 1;
+        }
+    }
+    printf("Ma tran chi phi da khoi tao thanh cong.\n");
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}

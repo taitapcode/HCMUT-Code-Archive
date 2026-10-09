@@ -1,0 +1,21 @@
+\section{Giới thiệu chung về Template}
+\label{sec:intro}
+
+Tài liệu này là \textbf{bản mẫu chuẩn (Reference Template)} dành cho các bài báo cáo bài tập lớn, đồ án môn học và nghiên cứu khoa học tại Trường Đại học Bách Khoa - ĐHQG TP.HCM. Mục tiêu của mẫu này là cung cấp sẵn cấu trúc hoàn chỉnh, đã giải quyết triệt để vấn đề tương thích tiếng Việt có dấu, đồng thời chuẩn hóa kiểu dáng hiển thị cho:
+\begin{itemize}
+    \item Hệ thống tiêu đề đa cấp và mục lục tự động.
+    \item Công thức toán học và các khối định lý, bổ đề, định nghĩa.
+    \item Bảng biểu chuẩn xuất bản học thuật (sử dụng gói \texttt{booktabs}).
+    \item Hình ảnh, hình ảnh ghép (\texttt{subfigures}) và sơ đồ vector \texttt{TikZ}.
+    \item Thuật toán mã giả (\texttt{algorithm2e}) có hỗ trợ từ khóa tiếng Việt.
+    \item Khối mã nguồn (\texttt{listings}) theo phong cách \textit{Academic / GitHub Light} thanh lịch, trang nhã.
+\end{itemize}
+
+\subsection{Cấu trúc thư mục khuyến nghị}
+Để dự án báo cáo luôn gọn gàng và dễ bảo trì khi làm việc nhóm, mã nguồn nên được tổ chức theo cấu trúc module:
+\begin{itemize}
+    \item \texttt{main.tex}: File gốc điều phối toàn bộ tài liệu, nạp các gói và gọi các chương mục.
+    \item \texttt{hcmut.sty}: Gói định dạng giao diện, phông chữ, header/footer và các môi trường chuyên biệt.
+    \item \texttt{Images/}: Thư mục chứa toàn bộ hình ảnh minh họa, logo, đồ thị dạng PNG, JPG hoặc PDF vector.
+    \item \texttt{Sections/}: Thư mục chứa từng nội dung chương cụ thể\\(\texttt{00\_title.tex}, \texttt{01\_introduction.tex},...).
+\end{itemize}

@@ -1,0 +1,89 @@
+\section{Bảng biểu, Hình ảnh và Sơ đồ TikZ}
+\label{sec:tables_figures}
+
+\subsection{Bảng biểu chuẩn phong cách Học thuật (Booktabs)}
+Một bài báo cáo chuyên nghiệp không nên sử dụng các đường kẻ dọc thô sơ trong bảng. Thay vào đó, quy chuẩn quốc tế sử dụng gói \texttt{booktabs} với 3 đường kẻ ngang chính: \texttt{\textbackslash toprule}, \texttt{\textbackslash midrule}, và \texttt{\textbackslash bottomrule}.
+
+\begin{table}[h!]
+\centering
+\caption{So sánh hiệu năng giữa thuật toán ngây thơ và mô hình ILP}
+\label{tab:comparison}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Phương pháp} & \textbf{Số ca thi} & \textbf{Thời gian giải (s)} & \textbf{Penalty} & \textbf{Khả thi (Feasible)} \\
+\midrule
+Tham lam (Greedy)   & 120                & 0.05                        & 142.8            & 75.0\% \\
+Heuristic Tabu      & 120                & 1.84                        & 45.2             & 98.3\% \\
+ILP (SCIP Solver)   & 120                & 3.42                        & \textbf{12.6}    & \textbf{100.0\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Bảng phức hợp kết hợp đa dòng (Multirow) và đa cột (Multicolumn)}
+\label{tab:complex}
+\begin{tabular}{llrcc}
+\toprule
+\multirow{2}{*}{\textbf{Cơ sở}} & \multirow{2}{*}{\textbf{Khu vực}} & \multicolumn{2}{c}{\textbf{Số lượng cán bộ}} & \multirow{2}{*}{\textbf{Tỷ lệ lấp đầy}} \\
+\cmidrule(lr){3-4}
+& & \textbf{Yêu cầu} & \textbf{Thực tế gán} & \\
+\midrule
+\multirow{2}{*}{Lý Thường Kiệt} & Nhà A4 & 24 & 24 & 100\% \\
+                                & Nhà B6 & 36 & 36 & 100\% \\
+\midrule
+Dĩ An                           & Nhà H1 & 50 & 50 & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Hình ảnh đơn và Hình ảnh ghép (Subfigures)}
+Hình~\ref{fig:single_logo} minh họa việc chèn ảnh đơn có chú thích và căn giữa. Hình~\ref{fig:subfigures_demo} minh họa việc ghép hai hình ảnh cạnh nhau qua môi trường \texttt{subcaption}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=3cm]{Images/bachkhoa-logo.png}
+\caption{Biểu trưng chính thức Trường Đại học Bách Khoa - ĐHQG TP.HCM}
+\label{fig:single_logo}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\begin{subfigure}[b]{0.35\textwidth}
+    \centering
+    \includegraphics[width=2.5cm]{Images/bachkhoa-logo.png}
+    \caption{Phân vùng cơ sở 1 (LTK)}
+    \label{fig:sub_ltk}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.35\textwidth}
+    \centering
+    \includegraphics[width=2.5cm]{Images/bachkhoa-logo.png}
+    \caption{Phân vùng cơ sở 2 (Dĩ An)}
+    \label{fig:sub_da}
+\end{subfigure}
+\caption{Minh họa bố trí tài nguyên theo hai cơ sở đào tạo}
+\label{fig:subfigures_demo}
+\end{figure}
+
+\subsection{Sơ đồ vector trực quan bằng TikZ}
+Template đã nạp sẵn gói \texttt{tikz} cùng các thư viện cần thiết để vẽ sơ đồ quy trình sắc nét ngay trong file \LaTeX:
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[
+    node distance=1.8cm,
+    block/.style={rectangle, draw=blue!70, fill=blue!5, thick, rounded corners, minimum height=1cm, minimum width=3.2cm, align=center},
+    arrow/.style={-Latex, thick, gray!80!black}
+]
+    \node [block] (input) {Dữ liệu ca thi \&\\Hồ sơ cán bộ};
+    \node [block, right=of input] (solver) {Bộ giải tối ưu\\(ILP Solver)};
+    \node [block, right=of solver] (output) {Lịch phân công\\hợp lệ (\texttt{.csv})};
+
+    \draw [arrow] (input) -- node[above, font=\footnotesize] {Mô hình hóa} (solver);
+    \draw [arrow] (solver) -- node[above, font=\footnotesize] {Tối ưu hóa} (output);
+\end{tikzpicture}
+\caption{Quy trình xử lý dữ liệu và xuất kết quả phân công}
+\label{fig:pipeline}
+\end{figure}

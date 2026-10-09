@@ -1,0 +1,225 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hcmut}[2026/10/09 v2.0 HCMUT Report Template Package]
+
+% ==============================================================================
+% 1. XỬ LÝ FONT & BẢNG MÃ (ĐA NỀN TẢNG: TECTONIC / XETEX / PDFLATEX)
+% ==============================================================================
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T5]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else
+  \usepackage{fontspec}
+  % Sử dụng Latin Modern Roman (Computer Modern) mặc định - font chuẩn của LaTeX.
+  % Nét chữ thanh mảnh, font bold mềm mại, thanh thoát tự nhiên (không bị quá đậm/nặng như Times New Roman Bold).
+\fi
+
+% ==============================================================================
+% 2. CĂN LỀ & BỐ CỤC TRANG (QUY CHUẨN ĐHQG TP.HCM / ĐH BÁCH KHOA)
+% ==============================================================================
+% Quy định: Lề trái 25mm, lề phải 25mm (căn giữa cân đối cho báo cáo nộp file PDF), lề trên 25mm, lề dưới 25mm
+\usepackage[
+  a4paper,
+  left=25mm,
+  right=25mm,
+  top=25mm,
+  bottom=25mm,
+  headheight=40pt,
+  headsep=12pt,
+  footskip=30pt
+]{geometry}
+
+\usepackage{setspace}
+\onehalfspacing             % Giãn dòng 1.5 chuẩn văn bản học thuật
+\setlength{\parindent}{0pt} % Không thụt đầu dòng (phong cách hiện đại)
+\setlength{\parskip}{6pt}   % Khoảng cách giữa các đoạn văn thoáng đãng
+
+% ==============================================================================
+% 3. CÁC GÓI TOÁN HỌC & MÔI TRƯỜNG ĐỊNH LÝ
+% ==============================================================================
+\usepackage{amsmath,amssymb,amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Định lý}[section]
+\newtheorem{lemma}[theorem]{Bổ đề}
+\newtheorem{proposition}[theorem]{Mệnh đề}
+\newtheorem{corollary}[theorem]{Hệ quả}
+\newtheorem{property}[theorem]{Tính chất}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Định nghĩa}[section]
+\newtheorem{example}{Ví dụ}[section]
+
+\theoremstyle{remark}
+\newtheorem{remark}{Nhận xét}[section]
+
+% ==============================================================================
+% 4. BẢNG BIỂU & HÌNH ẢNH
+% ==============================================================================
+\usepackage{graphicx}
+\usepackage{booktabs}       % Đường kẻ bảng chuyên nghiệp (\toprule, \midrule, \bottomrule)
+\usepackage{tabularx}       % Bảng tự động căn chỉnh bề rộng cột
+\usepackage{multirow}       % Gộp nhiều dòng trong bảng
+\usepackage{multicol}       % Trình bày văn bản đa cột
+\usepackage{caption}
+\usepackage{subcaption}     % Chèn nhiều hình phụ (subfigures) cạnh nhau
+\usepackage{rotating}       % Xoay bảng/hình khổ ngang
+\usepackage{tikz}           % Vẽ sơ đồ vector trực tiếp trong LaTeX
+\usetikzlibrary{arrows.meta, positioning, backgrounds, shapes.geometric}
+
+% ==============================================================================
+% 5. TIÊU ĐỀ ĐẦU TRANG & CHÂN TRANG (FANCYHDR)
+% ==============================================================================
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% Các biến cấu hình tiêu đề (có thể override trong main.tex)
+\newcommand{\headercoursename}[1]{\def\@headercoursename{#1}}
+\newcommand{\footerreporttitle}[1]{\def\@footerreporttitle{#1}}
+\headercoursename{}
+\footerreporttitle{Báo cáo Đồ án / Bài tập lớn}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{%
+  \raisebox{-3pt}{\includegraphics[width=9mm, height=9mm]{Images/bachkhoa-logo.png}}%
+  \hspace{8pt}%
+  \parbox[b]{11cm}{%
+    \ttfamily\fontsize{9pt}{11pt}\selectfont%
+    Trường Đại Học Bách khoa, TP Hồ Chí Minh\\[2pt]%
+    Khoa Khoa học và Kỹ thuật Máy tính%
+  }%
+}
+\fancyhead[R]{%
+  \parbox[b]{4cm}{\raggedleft\fontsize{8.5pt}{10.5pt}\selectfont\textit{\@headercoursename}}%
+}
+
+\fancyfoot{}
+\fancyfoot[L]{%
+  \fontsize{8.5pt}{10.5pt}\selectfont\ttfamily\textit{\@footerreporttitle}%
+}
+\fancyfoot[R]{%
+  \fontsize{8.5pt}{10.5pt}\selectfont\ttfamily Trang {\thepage}/\pageref{LastPage}%
+}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Kiểu trang riêng cho trang mục lục hoặc trang đầu chương
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[R]{\fontsize{8.5pt}{10.5pt}\selectfont Trang {\thepage}/\pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% ==============================================================================
+% 6. THUẬT TOÁN (ALGORITHM2E)
+% ==============================================================================
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Đầu vào}
+\SetKwInput{KwOut}{Đầu ra}
+\SetKw{KwRet}{Trả về}
+\SetKw{KwTo}{đến}
+
+% ==============================================================================
+% 7. ĐỊNH DẠNG MÃ NGUỒN CODE LISTING (ACADEMIC / ELEGANT THEME)
+% ==============================================================================
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{codeBg}{HTML}{F8F9FA}         % Nền xám ngọc rất sáng, thanh lịch
+\definecolor{codeFrame}{HTML}{D0D7DE}      % Viền xám mảnh chuẩn GitHub/Modern
+\definecolor{codeKeyword}{HTML}{0033B3}    % Từ khóa: Xanh navy đậm, lịch sự
+\definecolor{codeComment}{HTML}{6A737D}    % Chú thích: Xám chì nghiêng
+\definecolor{codeString}{HTML}{0A8543}     % Chuỗi: Xanh lá rừng trầm trang nhã
+\definecolor{codeNumber}{HTML}{8C959F}     % Số dòng: Xám nhạt vừa phải
+\definecolor{codeIdentifier}{HTML}{24292E} % Tên biến / mã: Đen than mềm mắt
+
+\lstdefinestyle{academicListing}{
+    backgroundcolor=\color{codeBg},
+    commentstyle=\color{codeComment}\itshape,
+    keywordstyle=\color{codeKeyword}\bfseries,
+    numberstyle=\tiny\color{codeNumber},
+    stringstyle=\color{codeString},
+    basicstyle=\ttfamily\footnotesize\color{codeIdentifier},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    xleftmargin=2.8em,
+    framexleftmargin=2.4em,
+    frame=single,
+    framerule=0.6pt,
+    rulecolor=\color{codeFrame},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    escapeinside={(*@}{@*)}
+}
+
+\lstdefinestyle{CStyle}{
+    style=academicListing,
+    language=C
+}
+
+\lstset{style=academicListing}
+
+% ==============================================================================
+% 8. TIÊU ĐỀ MỤC CẤP SÂU (SUBSUBSECTION & SUBSUBSUBSECTION)
+% ==============================================================================
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{3}
+
+\makeatletter
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\@alph\c@subsubsubsection}
+\newcommand\subsubsubsection{\@startsection{subsubsubsection}{4}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\newcommand*\l@subsubsubsection{\@dottedtocline{4}{10.0em}{4.1em}}
+\newcommand*{\subsubsubsectionmark}[1]{}
+
+% Định dạng tiêu đề Mục lục canh giữa
+\renewcommand\tableofcontents{%
+    \begin{center}%
+      {\Large\bfseries\contentsname\par}%
+      \vspace{1em}%
+    \end{center}%
+    \@mkboth{\MakeUppercase\contentsname}{\MakeUppercase\contentsname}%
+    \@starttoc{toc}%
+}
+\makeatother
+
+
+% ==============================================================================
+% 9. VIỆT HÓA TÊN CÁC MỤC MẶC ĐỊNH
+% ==============================================================================
+\AtBeginDocument{
+  \renewcommand*\contentsname{Mục lục}
+  \renewcommand*\listfigurename{Danh sách hình vẽ}
+  \renewcommand*\listtablename{Danh sách bảng}
+  \renewcommand*\refname{Tài liệu tham khảo}
+  \renewcommand*\tablename{Bảng}
+  \renewcommand*\figurename{Hình}
+  \renewcommand*\algorithmcfname{Thuật toán}
+  \renewcommand*\lstlistingname{Mã nguồn}
+  \renewcommand*\lstlistlistingname{Danh sách mã nguồn}
+}
+
+% ==============================================================================
+% 10. LIÊN KẾT SIÊU VĂN BẢN (HYPERREF)
+% ==============================================================================
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue!80!black,
+    urlcolor=blue!80!black,
+    pdfborder={0 0 0}
+}
+
+\endinput

@@ -1,0 +1,40 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{hcmut}
+
+% ==============================================================================
+% CẤU HÌNH TIÊU ĐỀ ĐẦU TRANG & CHÂN TRANG (HEADER / FOOTER)
+% ==============================================================================
+% Thay đổi tên môn học (hiển thị góc trên bên phải trang nội dung)
+\headercoursename{TÊN MÔN HỌC (MÃ MÔN)}
+
+% Thay đổi tiêu đề báo cáo (hiển thị góc dưới bên trái trang nội dung)
+\footerreporttitle{Báo cáo Bài tập lớn / Đồ án môn học}
+
+\begin{document}
+
+% ==============================================================================
+% 1. TRANG BÌA (KHÔNG HIỂN THỊ HEADER/FOOTER VÀ SỐ TRANG)
+% ==============================================================================
+\input{Sections/00_title}
+\newpage
+
+% ==============================================================================
+% 2. MỤC LỤC (KHÔNG ĐÁNH SỐ TRANG)
+% ==============================================================================
+\pagestyle{empty}
+\tableofcontents
+\newpage
+
+% ==============================================================================
+% 3. NỘI DUNG CHÍNH CỦA BÁO CÁO (BẮT ĐẦU ĐÁNH SỐ TRANG 1 TỪ TRANG NỘI DUNG)
+% ==============================================================================
+\pagestyle{fancy}
+\setcounter{page}{1}
+\input{Sections/01_introduction}
+\input{Sections/02_structure_and_text}
+\input{Sections/03_math_and_theorems}
+\input{Sections/04_tables_and_figures}
+\input{Sections/05_algorithms_and_code}
+\input{Sections/06_conclusion_and_references}
+
+\end{document}
