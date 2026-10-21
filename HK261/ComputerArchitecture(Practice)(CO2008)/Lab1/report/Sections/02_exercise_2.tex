@@ -1,0 +1,63 @@
+\section{Exercise 2}
+
+Mảng khai báo bằng \texttt{.word 0:5} gồm 5 phần tử, mỗi phần tử 4 byte. Với chỉ số $i$ lưu trong \texttt{\$t0}, địa chỉ phần tử thứ $i$ là $\text{base} + 4i$, với phép nhân 4 được thay bằng dịch trái 2 bit:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+  sll $t2, $t0, 2   # $t2 = 4i
+  add $t2, $s0, $t2 # $t2 = base + 4i
+  sw $t1, 0($t2)    # cất $t1 vào phần tử thứ i
+\end{lstlisting}
+
+Mỗi lời nhắc gồm 3 syscall: syscall 4 in \texttt{"Please input element "}, syscall 1 in chỉ số, syscall 11 in dấu \texttt{":"}:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+input_element_loop:
+  li $v0, 4            # syscall 4: in chuỗi
+  la $a0, input_prompt # "Please input element "
+  syscall
+
+  li $v0, 1            # syscall 1: in số nguyên
+  move $a0, $t0        # in chỉ số đang duyệt
+  syscall
+
+  li $v0, 11           # syscall 11: in ký tự
+  li $a0, ':'          # in dấu hai chấm
+  syscall
+\end{lstlisting}
+
+Chỉ số nhập vào được dùng trực tiếp để tính offset rồi nạp phần tử:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+  li $v0, 5
+  syscall
+
+  move $t0, $v0     # đưa chỉ số vào $t0
+  sll $t2, $t0, 2   # dịch trái 2 bit để nhân 4
+  add $t3, $s0, $t2 # tính địa chỉ phần tử
+
+  li $v0, 1
+  lw $a0, 0($t3)
+  syscall
+\end{lstlisting}
+
+Với mảng $5, 10, 15, 20, 25$, nhập chỉ số 1 rồi nhập chỉ số 4:
+
+\begin{lstlisting}[language={},numbers=none]
+Please input element 0:5
+Please input element 1:10
+Please input element 2:15
+Please input element 3:20
+Please input element 4:25
+Please enter index:1
+10
+\end{lstlisting}
+
+\begin{lstlisting}[language={},numbers=none]
+Please input element 0:5
+Please input element 1:10
+Please input element 2:15
+Please input element 3:20
+Please input element 4:25
+Please enter index:4
+25
+\end{lstlisting}

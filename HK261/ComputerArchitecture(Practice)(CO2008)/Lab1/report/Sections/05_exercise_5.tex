@@ -1,0 +1,41 @@
+\section{Exercise 5}
+
+Mảng được khai báo bằng \texttt{.word} gồm 10 phần tử lưu địa chỉ và \texttt{\$s0}, cùng biến \texttt{array\_size} lưu độ dài mảng vào \texttt{\$s1}.
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+.data
+  array: .word 1, 2, 5, 8, 12, 44, 3, 9, 0, 10
+  array_size: .word 10
+\end{lstlisting}
+
+Bộ đếm \texttt{\$t0} chạy từ 1 đến 10, nên chỉ số cần in là $\texttt{array\_size} - \texttt{\$t0}$. Chỉ số được đổi sang offset byte bằng \texttt{sll} 2:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+print_reverse_loop:
+  sub $t1, $s1, $t0 # chỉ số = array_size - bộ đếm
+  sll $t1, $t1, 2   # đổi chỉ số sang offset byte
+  add $t1, $s0, $t1 # $t1 = địa chỉ phần tử
+
+  li $v0, 1         # syscall 1: in số nguyên
+  lw $a0, 0($t1)    # nạp giá trị phần tử
+  syscall
+\end{lstlisting}
+
+Dấu phẩy được in sau mỗi phần tử, trừ phần tử cuối. Khi bộ đếm bằng \texttt{array\_size} thì nhảy tới \texttt{exit} trước khi in \texttt{", "}, nên kết quả không có dấu phẩy thừa:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+  beq $t0, $s1, exit   # phần tử cuối thì không in dấu phẩy
+
+  li $v0, 4            # syscall 4: in chuỗi
+  la $a0, comma        # ", "
+  syscall
+
+  addi $t0, $t0, 1     # sang phần tử kế
+  j print_reverse_loop
+\end{lstlisting}
+
+Chương trình in ra:
+
+\begin{lstlisting}[language={},numbers=none]
+10, 0, 9, 3, 44, 12, 8, 5, 2, 1
+\end{lstlisting}

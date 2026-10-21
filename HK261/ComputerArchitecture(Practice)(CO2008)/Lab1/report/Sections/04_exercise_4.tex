@@ -1,0 +1,51 @@
+\section{Exercise 4}
+
+Bước kiểm tra dùng \texttt{sltiu}, tức so sánh không dấu với 16. Số âm ở dạng unsigned
+là một số không dấu rất lớn nên bị loại bởi cùng một lệnh với các số $\geq 16$.
+Nếu nhập sai thì chương trình quay về nhãn \texttt{input} để nhập lại:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+input:
+  li $v0, 4          # syscall 4: in prompt
+  la $a0, prompt
+  syscall
+
+  li $v0, 5          # syscall 5: đọc số nguyên
+  syscall
+
+  sltiu $t0, $v0, 16 # 1 nếu 0 <= n < 16, so sánh không dấu
+  beq $t0, 0, input  # ngoài khoảng thì nhập lại
+\end{lstlisting}
+
+Phần in dùng \texttt{srlv} để dịch phải theo số bit lấy từ thanh ghi.
+Bộ đếm chạy từ 3 xuống 0, tương ứng với 4 bit từ trọng số 8 đến 1.
+Mỗi vòng dịch phải, dùng \texttt{andi} lấy bit, cộng \texttt{'0'} rồi in bằng syscall 11.
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+  move $s0, $v0        # lưu n vào $s0 trước khi in
+  li $t0, 3            # bắt đầu từ bit 3, ứng với trọng số 8
+
+  li $v0, 4            # syscall 4: in chuỗi
+  la $a0, output_msg   # "Its binary form is: "
+  syscall
+
+print_loop:
+  srlv $t1, $s0, $t0   # đưa bit thứ $t0 xuống vị trí 0
+  andi $t1, $t1, 1     # lấy đúng bit đó
+  addi $t1, $t1, '0'   # đổi sang mã ASCII
+
+  li $v0, 11           # syscall 11: in ký tự
+  move $a0, $t1
+  syscall
+
+  subi $t0, $t0, 1     # lùi sang bit thấp hơn
+  bgez $t0, print_loop # còn bit thì lặp
+\end{lstlisting}
+
+Nhập 20 bị từ chối, sau đó nhập 10:
+
+\begin{lstlisting}[language={},numbers=none]
+Please enter a positive integer less than 16: 20
+Please enter a positive integer less than 16: 10
+Its binary form is: 1010
+\end{lstlisting}

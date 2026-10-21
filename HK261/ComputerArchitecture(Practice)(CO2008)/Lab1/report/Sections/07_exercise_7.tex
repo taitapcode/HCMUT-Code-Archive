@@ -1,0 +1,60 @@
+\section{Exercise 7}
+
+\begin{center}
+\begin{tabular}{lccc}
+  \toprule
+  Bộ xử lý & $f$ & CPI\\
+  \midrule
+  P1 & 3{,}0 GHz & 1{,}5 \\
+  P2 & 2{,}5 GHz & 1{,}0 \\
+  P3 & 4{,}0 GHz & 2{,}2 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{a. Bộ xử lý nào có IPS cao nhất}
+
+Số lệnh thực hiện trong một giây là $\text{IPS} = f / \text{CPI}$:
+\begin{align*}
+  \text{IPS}_{P1} &= \frac{3 \times 10^9}{1{,}5} = 2 \times 10^9 \\
+  \text{IPS}_{P2} &= \frac{2{,}5 \times 10^9}{1} = 2{,}5 \times 10^9 \\
+  \text{IPS}_{P3} &= \frac{4 \times 10^9}{2{,}2} \approx 1{,}82 \times 10^9
+\end{align*}
+P2 có IPS cao nhất, dù xung nhịp của nó thấp hơn P1 và P3.
+
+\subsubsection*{b. Số lệnh và số chu kỳ trong 10 giây}
+
+Với thời gian $t = 10$ s:
+
+\begin{center}
+\begin{tabular}{lccc}
+  \toprule
+  Bộ xử lý & Số chu kỳ $= f \times t$ & Số lệnh $= \text{IPS} \times t$ \\
+  \midrule
+  P1 & $3{,}0 \times 10^{10}$ & $2{,}00 \times 10^{10}$ \\
+  P2 & $2{,}5 \times 10^{10}$ & $2{,}50 \times 10^{10}$ \\
+  P3 & $4{,}0 \times 10^{10}$ & $1{,}82 \times 10^{10}$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{c. Xung nhịp cần thiết để giảm 30\% thời gian thực thi}
+
+Gọi $f$ và $f'$ là xung nhịp cũ và mới. Thời gian thực thi là $t = \dfrac{IC \times \text{CPI}}{f}$. Khi thời gian giảm 30\% và CPI tăng 20\%:
+\[
+  0{,}7\,t = \frac{IC \times 1{,}2\,\text{CPI}}{f'}
+  \;\Longrightarrow\;
+  f' = \frac{1{,}2}{0{,}7}\,f \approx 1{,}714\,f
+\]
+
+\begin{center}
+\begin{tabular}{lcc}
+  \toprule
+  Bộ xử lý & $f$ hiện tại & $f'$ cần thiết $(\approx 1{,}714\,f)$  \\
+  \midrule
+  P1 & 3{,}0 GHz & 5{,}14 GHz \\
+  P2 & 2{,}5 GHz & 4{,}29 GHz \\
+  P3 & 4{,}0 GHz & 6{,}86 GHz \\
+  \bottomrule
+\end{tabular}
+\end{center}

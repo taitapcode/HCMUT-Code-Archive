@@ -1,0 +1,55 @@
+\section{Exercise 3}
+
+Các chuỗi nhắc nhập và thông báo được khai báo sẵn trong vùng \texttt{.data}:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+.data
+  prompt_a: .asciiz "Insert a: "
+  prompt_b: .asciiz "Insert b: "
+  prompt_c: .asciiz "Insert c: "
+  prompt_d: .asciiz "Insert d: "
+
+  msg_f: .asciiz "F = "
+  remainder_msg: .asciiz ", remainder "
+\end{lstlisting}
+
+Mỗi lần nhập in prompt bằng syscall 4, đọc số bằng syscall 5 rồi lưu vào thanh ghi. Dưới đây là khối nhập của $a$; ba biến còn lại làm tương tự với \texttt{prompt\_b}--\texttt{prompt\_d} và \texttt{\$s1}--\texttt{\$s3}:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+  li $v0, 4        # syscall 4: in prompt
+  la $a0, prompt_a
+  syscall
+  li $v0, 5        # syscall 5: đọc số nguyên
+  syscall
+  move $s0, $v0    # lưu a vào $s0
+\end{lstlisting}
+
+Tử số gồm ba thừa số: $a+10$ dùng \texttt{addi}, $b-d$ dùng \texttt{sub}, còn $c-2a$ thì dịch trái $a$ 1 bit rồi trừ. Sau đó nhân dồn lại:
+
+\begin{lstlisting}[language=MIPS,numbers=none]
+  addi $t0, $s0, 10 # $t0 = a + 10
+  sub $t1, $s1, $s3 # $t1 = b - d
+
+  sll $t2, $s0, 1   # $t2 = 2a
+  sub $t2, $s2, $t2 # $t2 = c - 2a
+
+  add $t3, $s0, $s1 # $t3 = a + b
+  add $t3, $t3, $s2 # $t3 = a + b + c
+
+  mul $t0, $t0, $t1 # tử = (a + 10)(b - d)
+  mul $t0, $t0, $t2 # nhân tiếp với (c - 2a)
+
+  div $t0, $t3      # chia tử cho mẫu
+  mflo $t0          # $t0 = thương
+  mfhi $t1          # $t1 = số dư
+\end{lstlisting}
+
+Với $a=3$, $b=4$, $c=5$, $d=6$: tử số là $13 \times (-2) \times (-1) = 26$, mẫu số là $12$, nên $F = 2$ dư $2$.
+
+\begin{lstlisting}[language={},numbers=none]
+Insert a: 3
+Insert b: 4
+Insert c: 5
+Insert d: 6
+F = 2, remainder 2
+\end{lstlisting}
