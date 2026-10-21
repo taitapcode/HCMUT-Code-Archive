@@ -167,6 +167,38 @@
 
 \lstset{style=academicListing}
 
+% listings không có sẵn dialect MIPS: khai báo để dùng language=MIPS
+\lstdefinelanguage{MIPS}{
+    morekeywords={li,la,lw,sw,lb,sb,lh,sh,
+                  add,addi,addu,addiu,sub,subu,subi,
+                  mul,mult,multu,div,divu,mflo,mfhi,
+                  move,sll,sllv,srl,srlv,sra,srav,
+                  and,andi,or,ori,xor,xori,nor,
+                  slt,slti,sltu,sltiu,
+                  beq,bne,beqz,bnez,bgez,bgtz,blez,bltz,
+                  j,jal,jr,syscall,break,nop},
+    morecomment=[l]{\#},
+    morestring=[b]"
+}
+
+% listings chỉ xử lý ký tự <= 0xFF; nguyên âm tiếng Việt dựng sẵn (U+1EA0..) bị
+% đẩy lệch vị trí hoặc mất hẳn trong mã nguồn nếu không đăng ký vào lớp letter.
+\lstset{extendedchars=true}
+\makeatletter
+\begingroup
+\catcode0=12
+\g@addto@macro\lst@DefEC{%
+  \lst@CCECUse\lst@ProcessLetter
+    ảạăằắẳẵặầấẩẫậẻẽẹềếểễệỉĩị%
+    ỏọồốổỗộơờớởỡợủũụưừứửữựỳỷ%
+    ỹỵđẢẠĂẰẮẲẴẶẦẤẨẪẬẺẼẸỀẾỂỄỆ%
+    ỈĨỊỎỌỒỐỔỖỘƠỜỚỞỠỢỦŨỤƯỪỨỬỮ%
+    ỰỲỶỸỴĐ%
+    ^^00%
+}
+\endgroup
+\makeatother
+
 % ==============================================================================
 % 8. TIÊU ĐỀ MỤC CẤP SÂU (SUBSUBSECTION & SUBSUBSUBSECTION)
 % ==============================================================================
