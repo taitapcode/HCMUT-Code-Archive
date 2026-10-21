@@ -4,7 +4,6 @@
 
 .text
 main:
-
 input:
   li $v0, 4
   la $a0, prompt
@@ -16,16 +15,15 @@ input:
   sltiu $t0, $v0, 16
   beq $t0, 0, input
 
-process:
   move $s0, $v0
-  li, $t0, 3
+  li $t0, 3
 
   li $v0, 4
   la $a0, output_msg
   syscall
 
 print_loop:
-  srlv $t1, $s0, $t0 # Shift right logical variable
+  srlv $t1, $s0, $t0
   andi $t1, $t1, 1
   addi $t1, $t1, '0'
 
@@ -34,9 +32,7 @@ print_loop:
   syscall
 
   subi $t0, $t0, 1
-  bgez $t0, print_loop # Greater or equal
+  bgez $t0, print_loop
 
-
-exit:
   li $v0, 10
   syscall
