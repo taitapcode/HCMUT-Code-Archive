@@ -10,21 +10,21 @@ main:
   li $t0, 1
 
 print_reverse_loop:
-  sub $t1, $s1, $t0
-  sll $t1, $t1, 2
-  add $t1, $s0, $t1
+  sub $t1, $s1, $t0 # chỉ số = array_size - bộ đếm
+  sll $t1, $t1, 2   # đổi chỉ số sang offset byte
+  add $t1, $s0, $t1 # $t1 = địa chỉ phần tử
 
-  li $v0, 1
-  lw $a0, 0($t1)
+  li $v0, 1         # syscall 1: in số nguyên
+  lw $a0, 0($t1)    # nạp giá trị phần tử
   syscall
 
-  beq $t0, $s1, exit
+  beq $t0, $s1, exit   # phần tử cuối thì không in dấu phẩy
 
-  li $v0, 4
-  la $a0, comma
+  li $v0, 4            # syscall 4: in chuỗi
+  la $a0, comma        # ", "
   syscall
 
-  addi $t0, $t0, 1
+  addi $t0, $t0, 1     # sang phần tử kế
   j print_reverse_loop
 
 exit:

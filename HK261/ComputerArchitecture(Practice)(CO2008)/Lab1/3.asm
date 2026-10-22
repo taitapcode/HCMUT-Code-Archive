@@ -9,12 +9,12 @@
 
 .text
 main:
-  li $v0, 4
+  li $v0, 4        # syscall 4: in prompt
   la $a0, prompt_a
   syscall
-  li $v0, 5
+  li $v0, 5        # syscall 5: đọc số nguyên
   syscall
-  move $s0, $v0
+  move $s0, $v0    # lưu a vào $s0
 
   li $v0, 4
   la $a0, prompt_b
@@ -37,21 +37,21 @@ main:
   syscall
   move $s3, $v0
 
-  addi $t0, $s0, 10
-  sub $t1, $s1, $s3
+  addi $t0, $s0, 10 # $t0 = a + 10
+  sub $t1, $s1, $s3 # $t1 = b - d
 
-  sll $t2, $s0, 1
-  sub $t2, $s2, $t2
+  sll $t2, $s0, 1   # $t2 = 2a
+  sub $t2, $s2, $t2 # $t2 = c - 2a
 
-  add $t3, $s0, $s1
-  add $t3, $t3, $s2
+  add $t3, $s0, $s1 # $t3 = a + b
+  add $t3, $t3, $s2 # $t3 = a + b + c
 
-  mul $t0, $t0, $t1
-  mul $t0, $t0, $t2
+  mul $t0, $t0, $t1 # tử = (a + 10)(b - d)
+  mul $t0, $t0, $t2 # nhân tiếp với (c - 2a)
 
-  div $t0, $t3
-  mflo $t0
-  mfhi $t1
+  div $t0, $t3      # chia tử cho mẫu
+  mflo $t0          # $t0 = thương
+  mfhi $t1          # $t1 = số dư
 
   li $v0, 4
   la $a0, msg_f
