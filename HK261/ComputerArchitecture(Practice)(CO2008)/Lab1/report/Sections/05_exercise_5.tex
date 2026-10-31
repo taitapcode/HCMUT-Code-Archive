@@ -6,6 +6,7 @@ Mảng được khai báo bằng \texttt{.word} gồm 10 phần tử lưu địa
 .data
   array: .word 1, 2, 5, 8, 12, 44, 3, 9, 0, 10
   array_size: .word 10
+  comma: .asciiz ", "
 \end{lstlisting}
 
 Bộ đếm \texttt{\$t0} chạy từ 1 đến 10, nên chỉ số cần in là $\texttt{array\_size} - \texttt{\$t0}$. Chỉ số được đổi sang offset byte bằng \texttt{sll} 2:

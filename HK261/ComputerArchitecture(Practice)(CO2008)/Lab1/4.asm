@@ -25,9 +25,8 @@ input:
 print_loop:
   srlv $t1, $s0, $t0   # đưa bit thứ $t0 xuống vị trí 0
   andi $t1, $t1, 1     # lấy đúng bit đó
-  addi $t1, $t1, '0'   # đổi sang mã ASCII
 
-  li $v0, 11           # syscall 11: in ký tự
+  li $v0, 1           # syscall 1: in bit đó ra
   move $a0, $t1
   syscall
 
