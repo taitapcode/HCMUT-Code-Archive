@@ -4,51 +4,54 @@
 #include <string>
 #include <vector>
 
-struct StopInfo {
-    std::string stopId;
-    std::string displayName;
-    std::string searchKey;
+struct StopInfo
+{
+  std::string stopId;
+  std::string displayName;
+  std::string searchKey;
 };
 
-struct ArrivalEvent {
-    std::string eventId;
-    std::string stopId;
-    std::string routeId;
-    int arrivalTime;
+struct ArrivalEvent
+{
+  std::string eventId;
+  std::string stopId;
+  std::string routeId;
+  int arrivalTime;
 };
 
-class BKMove {
+class BKMove
+{
 public:
-    BKMove();
-    ~BKMove();
+  BKMove();
+  ~BKMove();
 
-    BKMove(const BKMove&) = delete;
-    BKMove& operator=(const BKMove&) = delete;
+  BKMove(const BKMove&) = delete;
+  BKMove& operator=(const BKMove&) = delete;
 
-    // Q3: Bus Stop Finder
-    bool addStop(const StopInfo& stop);
-    bool removeStop(const std::string& stopId);
-    bool findStop(const std::string& stopId, StopInfo& out) const;
-    int getStopCount() const;
-    std::vector<StopInfo> findStops(
-        const std::string& prefix, int page, int pageSize) const;
+  // Q3: Bus Stop Finder
+  bool addStop(const StopInfo& stop);
+  bool removeStop(const std::string& stopId);
+  bool findStop(const std::string& stopId, StopInfo& out) const;
+  int getStopCount() const;
+  std::vector<StopInfo> findStops(
+      const std::string& prefix, int page, int pageSize) const;
 
-    // Q4: Live Arrival Board
-    bool scheduleArrival(const ArrivalEvent& event);
-    bool peekNextArrival(const std::string& stopId,
-                         ArrivalEvent& out) const;
-    bool processNextArrival(const std::string& stopId,
-                            ArrivalEvent& out);
-    bool rescheduleArrival(const std::string& eventId,
-                           int newArrivalTime);
-    bool cancelArrival(const std::string& eventId);
+  // Q4: Live Arrival Board
+  bool scheduleArrival(const ArrivalEvent& event);
+  bool peekNextArrival(const std::string& stopId,
+                       ArrivalEvent& out) const;
+  bool processNextArrival(const std::string& stopId,
+                          ArrivalEvent& out);
+  bool rescheduleArrival(const std::string& eventId,
+                         int newArrivalTime);
+  bool cancelArrival(const std::string& eventId);
 
 private:
-    // Q3/Q4: Students propose their own private data members and helpers.
-    // BKMove must manage registered stops and pending arrival events.
-    // You may add classes/structs, extend BST/AVL/Heap, or use inheritance.
-    // Keep the public API and the provided data-record fields unchanged.
-    // All implementations must stay within the five permitted source files.
+  // Q3/Q4: Students propose their own private data members and helpers.
+  // BKMove must manage registered stops and pending arrival events.
+  // You may add classes/structs, extend BST/AVL/Heap, or use inheritance.
+  // Keep the public API and the provided data-record fields unchanged.
+  // All implementations must stay within the five permitted source files.
 };
 
 #endif  // BKMOVE_A2_H
