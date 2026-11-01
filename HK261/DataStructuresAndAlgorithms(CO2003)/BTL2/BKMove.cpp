@@ -10,6 +10,7 @@
 BKMove::BKMove() = default;
 BKMove::~BKMove()
 {
+  byEvent.clear(&BKMove::disposeEvent);
   byKey.clear(&BKMove::disposeStop);
 };
 
@@ -88,36 +89,66 @@ std::vector<StopInfo> BKMove::findStops(const std::string& prefix, int page, int
 // Q4 -- Live Arrival Board
 bool BKMove::scheduleArrival(const ArrivalEvent& event)
 {
-  (void)event;
-  return false;  // TODO Q4
+  if (event.eventId.empty() || event.stopId.empty() || event.routeId.empty())
+    return false;
+  if (event.arrivalTime < 0) return false;
+  if (byEvent.find(event.eventId)) return false;
+
+  StopNode* stop = byId.find(event.stopId);
+  if (!stop) return false;
+
+  EventSlot* slot = new EventSlot(event, stop);
+  byEvent.insert(event.eventId, slot);
+  slot->pos = (int)stop->board.size();
+  stop->board.push_back(slot);
+  ++stop->pending;
+  reheapUp(stop, slot->pos);
+  return true;
 }
 
-bool BKMove::peekNextArrival(
-    const std::string& stopId, ArrivalEvent& out) const
+bool BKMove::peekNextArrival(const std::string& stopId, ArrivalEvent& out) const
 {
-  (void)stopId;
-  (void)out;
-  return false;  // TODO Q4; do not modify out on failure
+  StopNode* stop = byId.find(stopId);
+  if (!stop || stop->board.empty()) return false;
+  out = stop->board.front()->event;
+  return true;
 }
 
 bool BKMove::processNextArrival(
     const std::string& stopId, ArrivalEvent& out)
 {
-  (void)stopId;
-  (void)out;
-  return false;  // TODO Q4; do not modify out on failure
+  StopNode* stop = byId.find(stopId);
+  if (!stop || stop->board.empty()) return false;
+
+  EventSlot* slot = stop->board.front();
+  out = slot->event;
+  byEvent.erase(slot->event.eventId);
+  detachSlot(stop, 0);
+  delete slot;
+  return true;
 }
 
-bool BKMove::rescheduleArrival(
-    const std::string& eventId, int newArrivalTime)
+bool BKMove::rescheduleArrival(const std::string& eventId, int newArrivalTime)
 {
-  (void)eventId;
-  (void)newArrivalTime;
-  return false;  // TODO Q4
+  if (newArrivalTime < 0) return false;
+
+  EventSlot* slot = byEvent.find(eventId);
+  if (!slot) return false;
+
+  slot->event.arrivalTime = newArrivalTime;
+  reheapUp(slot->owner, slot->pos);
+  reheapDown(slot->owner, slot->pos);
+  return true;
 }
 
 bool BKMove::cancelArrival(const std::string& eventId)
 {
-  (void)eventId;
-  return false;  // TODO Q4
+  EventSlot* slot = byEvent.find(eventId);
+  if (!slot) return false;
+
+  StopNode* stop = slot->owner;
+  byEvent.erase(eventId);
+  detachSlot(stop, slot->pos);
+  delete slot;
+  return true;
 }

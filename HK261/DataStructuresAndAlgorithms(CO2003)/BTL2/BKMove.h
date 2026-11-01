@@ -48,30 +48,39 @@ public:
 
 private:
   // Q3/Q4: Students propose their own private data members and helpers.
-  // BKMove must manage registered stops and pending arrival events.
-  // You may add classes/structs, extend BST/AVL/Heap, or use inheritance.
-  // Keep the public API and the provided data-record fields unchanged.
-  // All implementations must stay within the five permitted source files.
+  struct StopNode;
+
+  struct EventSlot
+  {
+    ArrivalEvent event;
+    int pos;
+    StopNode* owner;
+    EventSlot(const ArrivalEvent& e, StopNode* o)
+        : event(e), pos(-1), owner(o) {}
+  };
+
   struct StopNode
   {
     StopInfo info;
     int pending;
+    std::vector<EventSlot*> board;
     explicit StopNode(const StopInfo& s) : info(s), pending(0) {}
   };
 
-  class StopIndex
+  template <class T>
+  class Index
   {
   private:
     struct Node
     {
       std::string key;
-      StopNode* stop;
+      T* item;
       Node* left;
       Node* right;
       int height;
       int count;
-      Node(const std::string& k, StopNode* s)
-          : key(k), stop(s), left(nullptr), right(nullptr), height(1), count(1) {}
+      Node(const std::string& k, T* value)
+          : key(k), item(value), left(nullptr), right(nullptr), height(1), count(1) {}
     };
 
     Node* root;
@@ -135,17 +144,17 @@ private:
       return node;
     }
 
-    static Node* insert(Node* node, const std::string& key, StopNode* stop, bool& success)
+    static Node* insert(Node* node, const std::string& key, T* item, bool& success)
     {
       if (!node)
       {
         success = true;
-        return new Node(key, stop);
+        return new Node(key, item);
       }
       if (key < node->key)
-        node->left = insert(node->left, key, stop, success);
+        node->left = insert(node->left, key, item, success);
       else if (node->key < key)
-        node->right = insert(node->right, key, stop, success);
+        node->right = insert(node->right, key, item, success);
       else
         return node;
       return rebalance(node);
@@ -182,27 +191,27 @@ private:
         Node* succ = node->right;
         while (succ->left) succ = succ->left;
         node->key = succ->key;
-        node->stop = succ->stop;
+        node->item = succ->item;
         node->right = detachMin(node->right);
       }
       return rebalance(node);
     }
 
-    static void clear(Node* node, void (*dispose)(StopNode*))
+    static void clear(Node* node, void (*dispose)(T*))
     {
       if (!node) return;
       clear(node->left, dispose);
       clear(node->right, dispose);
-      if (dispose) dispose(node->stop);
+      if (dispose) dispose(node->item);
       delete node;
     }
 
   public:
-    StopIndex() : root(nullptr) {}
+    Index() : root(nullptr) {}
 
-    StopIndex(const StopIndex&) = delete;
-    StopIndex& operator=(const StopIndex&) = delete;
-    ~StopIndex() { clear(nullptr); }
+    Index(const Index&) = delete;
+    Index& operator=(const Index&) = delete;
+    ~Index() { clear(nullptr); }
 
     bool empty() const
     {
@@ -214,7 +223,7 @@ private:
       return root ? root->count : 0;
     }
 
-    void clear(void (*dispose)(StopNode*))
+    void clear(void (*dispose)(T*))
     {
       clear(root, dispose);
       root = nullptr;
@@ -222,19 +231,19 @@ private:
 
     bool erase(const std::string& key)
     {
-      bool sucess = false;
-      root = erase(root, key, sucess);
-      return sucess;
-    }
-
-    bool insert(const std::string& key, StopNode* stop)
-    {
       bool success = false;
-      root = insert(root, key, stop, success);
+      root = erase(root, key, success);
       return success;
     }
 
-    StopNode* find(const std::string& key) const
+    bool insert(const std::string& key, T* item)
+    {
+      bool success = false;
+      root = insert(root, key, item, success);
+      return success;
+    }
+
+    T* find(const std::string& key) const
     {
       Node* node = root;
       while (node)
@@ -244,7 +253,7 @@ private:
         else if (node->key < key)
           node = node->right;
         else
-          return node->stop;
+          return node->item;
       }
       return nullptr;
     }
@@ -268,7 +277,7 @@ private:
       return rank;
     }
 
-    void collect(int start, int limit, std::vector<StopNode*>& out) const
+    void collect(int start, int limit, std::vector<T*>& out) const
     {
       std::vector<Node*> st;
       Node* curr = root;
@@ -292,7 +301,7 @@ private:
 
       while (curr && (int)out.size() < limit)
       {
-        out.push_back(curr->stop);
+        out.push_back(curr->item);
         if (curr->right)
         {
           curr = curr->right;
@@ -313,11 +322,73 @@ private:
     }
   };
 
+  static bool earlier(const EventSlot* a, const EventSlot* b)
+  {
+    if (a->event.arrivalTime != b->event.arrivalTime)
+      return a->event.arrivalTime < b->event.arrivalTime;
+    return a->event.eventId < b->event.eventId;
+  }
+
+  static void swapSlots(StopNode* stop, int i, int j)
+  {
+    EventSlot* tmp = stop->board[i];
+    stop->board[i] = stop->board[j];
+    stop->board[j] = tmp;
+    stop->board[i]->pos = i;
+    stop->board[j]->pos = j;
+  }
+
+  static void reheapUp(StopNode* stop, int idx)
+  {
+    while (idx > 0)
+    {
+      int parent = (idx - 1) / 2;
+      if (!earlier(stop->board[idx], stop->board[parent])) break;
+      swapSlots(stop, idx, parent);
+      idx = parent;
+    }
+  }
+
+  static void reheapDown(StopNode* stop, int idx)
+  {
+    int n = (int)stop->board.size();
+    while (true)
+    {
+      int left = 2 * idx + 1;
+      int right = left + 1;
+      int best = idx;
+      if (left < n && earlier(stop->board[left], stop->board[best])) best = left;
+      if (right < n && earlier(stop->board[right], stop->board[best])) best = right;
+      if (best == idx) break;
+      swapSlots(stop, idx, best);
+      idx = best;
+    }
+  }
+
+  static void detachSlot(StopNode* stop, int idx)
+  {
+    int last = (int)stop->board.size() - 1;
+    if (idx != last)
+    {
+      EventSlot* moved = stop->board[last];
+      stop->board[idx] = moved;
+      moved->pos = idx;
+      stop->board.pop_back();
+      reheapUp(stop, idx);
+      reheapDown(stop, moved->pos);
+    }
+    else
+      stop->board.pop_back();
+    --stop->pending;
+  }
+
   static void disposeStop(StopNode* stop) { delete stop; }
+  static void disposeEvent(EventSlot* slot) { delete slot; }
   static bool nextPrefix(const std::string& prefix, std::string& upper);
 
-  StopIndex byKey;
-  StopIndex byId;
+  Index<StopNode> byKey;
+  Index<StopNode> byId;
+  Index<EventSlot> byEvent;
 };
 
 #endif  // BKMOVE_A2_H
