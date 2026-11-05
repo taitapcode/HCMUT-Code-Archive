@@ -3,23 +3,43 @@
 
 .text
   la $s0, array
-  li $s1, 0
+  li $t0, 0
 
 process_loop:
   li $v0, 5
   syscall
 
-  andi $t0, $v0, 3 # r = n & 3 <-> n % 4
-  sub $t1, $v0, $t0 # n - r
-  beq $t0, 3, round_up
+  andi $t1, $v0, 3 # r = n & 3 <-> r = n % 4
+  sub $v0, $v0, $t1 # n -= r
+  beq $t1, 3, round_up
   j next
 
 round_up:
-  addi $t1, $t1, 4
+  addi $v0, $v0, 4 # n += 4
 
 next:
-  sll $t0, $s1, 2
-  add $t0, $t0, $s0
-  sw $v0, 0($t0)
-  addi $s1, $s1, 1
-  bne $s1, 5, process_loop
+  sll $t1, $t0, 2
+  add $t1, $t1, $s0
+  sw $v0, 0($t1)
+  addi $t0, $t0, 1
+  bne $t0, 5, process_loop
+
+  li $t0, 0
+
+print:
+  li $v0, 1
+  sll $a0, $t0, 2
+  add $a0, $s0, $a0
+  lw $a0, 0($a0)
+  syscall
+
+  li $v0, 11
+  li $a0, ' '
+  syscall
+
+  addi $t0, $t0, 1
+  bne $t0, 5, print
+
+exit:
+  li $v0, 10
+  syscall
