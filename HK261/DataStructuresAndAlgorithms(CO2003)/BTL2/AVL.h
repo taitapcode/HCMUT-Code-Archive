@@ -188,9 +188,9 @@ private:
     K succKey = succ->data.key;
     root->data = succ->data;
 
-    bool dummyOk = false;
-    V dummyValue = 0;
-    root->pRight = remove(root->pRight, succKey, dummyOk, dummyValue);
+    bool tmpSuccess = false;
+    V tmpValue = 0;
+    root->pRight = remove(root->pRight, succKey, tmpSuccess, tmpValue);
     return rebalance(root);
   }
 };
