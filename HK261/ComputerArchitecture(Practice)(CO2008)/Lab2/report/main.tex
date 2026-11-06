@@ -1,0 +1,55 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{hcmut}
+
+% numbers=none: bỏ gutter số dòng nên không cần lề trái dành cho số
+\lstset{xleftmargin=0pt, framexleftmargin=0pt}
+
+% Khối code breakable: cho phép ngắt trang trong listing để không bỏ trống cuối trang
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,breakable,skins}
+\newtcblisting{codeblock}[1][]{
+  breakable, enhanced,
+  colback=codeBg, colframe=codeFrame,
+  boxrule=0.6pt, arc=1pt,
+  left=4pt, right=3pt, top=2pt, bottom=2pt,
+  before skip=4pt, after skip=4pt,
+  listing only,
+  listing options={style=academicListing, frame=none, backgroundcolor=\color{codeBg},
+                   numbers=none, xleftmargin=0pt, framexleftmargin=0pt, #1}
+}
+
+% ==============================================================================
+% CẤU HÌNH TIÊU ĐỀ ĐẦU TRANG & CHÂN TRANG (HEADER / FOOTER)
+% ==============================================================================
+% Thay đổi tên môn học (hiển thị góc trên bên phải trang nội dung)
+\headercoursename{KIẾN TRÚC MÁY TÍNH (CO2008)}
+
+% Thay đổi tiêu đề báo cáo (hiển thị góc dưới bên trái trang nội dung)
+\footerreporttitle{Báo cáo Lab 2}
+
+\begin{document}
+
+% ==============================================================================
+% 1. TRANG BÌA (KHÔNG HIỂN THỊ HEADER/FOOTER VÀ SỐ TRANG)
+% ==============================================================================
+\input{Sections/00_title}
+\newpage
+
+% ==============================================================================
+% 2. MỤC LỤC (KHÔNG ĐÁNH SỐ TRANG)
+% ==============================================================================
+\pagestyle{empty}
+\tableofcontents
+\newpage
+
+% ==============================================================================
+% 3. NỘI DUNG CHÍNH CỦA BÁO CÁO (BẮT ĐẦU ĐÁNH SỐ TRANG 1 TỪ TRANG NỘI DUNG)
+% ==============================================================================
+\pagestyle{fancy}
+\setcounter{page}{1}
+\input{Sections/01_exercise_1}
+\input{Sections/02_exercise_2}
+\input{Sections/03_exercise_3}
+\input{Sections/04_exercise_4}
+
+\end{document}
