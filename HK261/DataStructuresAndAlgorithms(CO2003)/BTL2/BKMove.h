@@ -213,11 +213,6 @@ private:
     Index& operator=(const Index&) = delete;
     ~Index() { clear(nullptr); }
 
-    bool empty() const
-    {
-      return !root;
-    }
-
     int size() const
     {
       return root ? root->count : 0;

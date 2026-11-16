@@ -12,7 +12,7 @@ BKMove::~BKMove()
 {
   byEvent.clear(&BKMove::disposeEvent);
   byKey.clear(&BKMove::disposeStop);
-};
+}
 
 bool BKMove::nextPrefix(const std::string& prefix, std::string& upper)
 {
@@ -29,6 +29,10 @@ bool BKMove::addStop(const StopInfo& stop)
 {
   if (stop.stopId.empty() || stop.displayName.empty() ||
       stop.searchKey.empty())
+    return false;
+  // '\0' joins searchKey and stopId in the name index key.
+  if (stop.searchKey.find('\0') != std::string::npos ||
+      stop.stopId.find('\0') != std::string::npos)
     return false;
   if (byId.find(stop.stopId)) return false;
 
@@ -66,6 +70,8 @@ std::vector<StopInfo> BKMove::findStops(const std::string& prefix, int page, int
 {
   std::vector<StopInfo> rows;
   if (page < 0 || pageSize <= 0) return rows;
+  // A prefix never spans the '\0' separator, so no searchKey can match it.
+  if (prefix.find('\0') != std::string::npos) return rows;
 
   const int begin = byKey.rank(prefix);
   int end = byKey.size();
