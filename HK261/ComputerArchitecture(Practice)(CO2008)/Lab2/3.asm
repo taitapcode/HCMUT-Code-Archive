@@ -1,7 +1,7 @@
 .data
   arr:    .word 0:10 # mảng 10 phần tử
 
-  prompt1: .asciiz "Please insert a element: " # lời nhắc nhập từng phần tử
+  prompt1: .asciiz "Please insert a element: "    # lời nhắc nhập từng phần tử
 
   msg1:  .asciiz "Second largest value is "       # chuỗi "Second largest value is "
   msg2:  .asciiz ", found in index "              # chuỗi ", found in index "

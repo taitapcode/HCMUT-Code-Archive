@@ -12,10 +12,10 @@ input:
   bgt $a0, 12, overflow # n > 12: kết quả vượt 32 bit
 
   jal factorial
-  move $t0, $v0 # $t0 = n!
+  move $t0, $v0         # $t0 = n!
 
-  li $v0, 1     # syscall 1: in số nguyên
-  move $a0, $t0 # in n!
+  li $v0, 1             # syscall 1: in số nguyên
+  move $a0, $t0         # in n!
   syscall
 
   j exit

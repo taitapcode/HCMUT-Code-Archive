@@ -24,8 +24,8 @@ next:
   addi $t0, $t0, 1         # i++
   bne $t0, 5, process_loop # đủ 5 phần tử thì dừng
 
-  li $t0, 0         # i = 0: duyệt lại từ đầu mảng
 
+  li $t0, 0         # i = 0: duyệt lại từ đầu mảng
 print:
   li $v0, 1         # syscall 1: in số nguyên
   sll $a0, $t0, 2   # $a0 = 4i
