@@ -30,7 +30,7 @@ bool BKMove::addStop(const StopInfo& stop)
   if (stop.stopId.empty() || stop.displayName.empty() ||
       stop.searchKey.empty())
     return false;
-  // '\0' joins searchKey and stopId in the name index key.
+
   if (stop.searchKey.find('\0') != std::string::npos ||
       stop.stopId.find('\0') != std::string::npos)
     return false;
