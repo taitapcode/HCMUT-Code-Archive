@@ -1,0 +1,144 @@
+\section{Exercise 2}
+
+Ta có thể biến đổi đề bài thành:
+$$\int_v^u \frac{ax^6 + bx^5 + cx}{d^4 + e^3}\,dx = \frac{F(u) - F(v)}{d^4 + e^3}$$
+Trong đó $F(x) = \dfrac{ax^7}{7} + \dfrac{bx^6}{6} + \dfrac{cx^2}{2}$ là nguyên hàm của tử số.
+
+Trước tiên, chương trình khai báo các chuỗi thông báo và hằng số thực cần thiết trong vùng nhớ \texttt{.data}:
+
+\begin{codeblock}[language=MIPS]
+.data
+  prompt_u: .asciiz "Please insert u: "
+  prompt_v: .asciiz "Please insert v: "
+  prompt_a: .asciiz "Please insert a: "
+  prompt_b: .asciiz "Please insert b: "
+  prompt_c: .asciiz "Please insert c: "
+  prompt_d: .asciiz "Please insert d: "
+  prompt_e: .asciiz "Please insert e: "
+  res_msg:  .asciiz "Result: "
+  msg_div0: .asciiz "Cannot divide by zero"
+
+  const0f:  .float 0.0
+  const7f:  .float 7.0
+  const6f:  .float 6.0
+  const2f:  .float 2.0
+\end{codeblock}
+
+Tiếp theo, chương trình lần lượt đọc bảy giá trị đầu vào theo thứ tự $u, v, a, b, c, d, e$ và lưu vào các thanh ghi \texttt{\$f20}--\texttt{\$f26}. Sáu khối nhập liệu còn lại có cấu trúc tương tự khối nhập $u$ dưới đây, chỉ thay đổi chuỗi lời nhắc và thanh ghi đích:
+
+\begin{codeblock}[language=MIPS]
+  li $v0, 4        # syscall 4: in chuỗi
+  la $a0, prompt_u # in "Please insert u: "
+  syscall
+
+  li $v0, 6        # syscall 6: đọc số thực
+  syscall
+  mov.s $f20, $f0  # $f20 = u (lưu lại trước khi $f0 bị ghi đè)
+\end{codeblock}
+
+Mẫu số $d^4 + e^3$ được tính và kiểm tra điều kiện khác $0$ ngay sau khi nhập dữ liệu:
+
+\begin{codeblock}[language=MIPS]
+  mul.s $f4, $f25, $f25 # $f4 = d^2
+  mul.s $f4, $f4, $f4   # $f4 = d^4
+
+  mul.s $f5, $f26, $f26 # $f5 = e^2
+  mul.s $f5, $f5, $f26  # $f5 = e^3
+
+  add.s $f30, $f4, $f5  # $f30 = d^4 + e^3
+  l.s $f6, const0f      # $f6 = 0.0
+  c.eq.s $f30, $f6      # kiểm tra mẫu số bằng 0
+  bc1t div_zero         # rẽ nhánh báo lỗi nếu chia cho 0
+\end{codeblock}
+
+Hàm $F$ nhận đối số qua \texttt{\$f12} và trả kết quả về \texttt{\$f0}. Hai giá trị $F(u)$ và $F(v)$ được lưu vào \texttt{\$f27} và \texttt{\$f28}:
+
+\begin{codeblock}[language=MIPS]
+  mov.s $f12, $f20       # truyền tham số x = u
+  jal F                  # gọi F(u)
+  mov.s $f27, $f0        # $f27 = F(u)
+
+  mov.s $f12, $f21       # truyền tham số x = v
+  jal F                  # gọi F(v)
+  mov.s $f28, $f0        # $f28 = F(v)
+
+  sub.s $f29, $f27, $f28 # $f29 = F(u) - F(v)
+  div.s $f12, $f29, $f30 # $f12 = (F(u) - F(v)) / (d^4 + e^3)
+\end{codeblock}
+
+Kết quả cuối cùng được nạp sẵn vào \texttt{\$f12}, in ra màn hình qua \texttt{syscall 2} và kết thúc chương trình:
+
+\begin{codeblock}[language=MIPS]
+  li $v0, 4       # syscall 4: in chuỗi
+  la $a0, res_msg # in "Result: "
+  syscall
+
+  li $v0, 2       # syscall 2: in số thực trong $f12
+  syscall
+
+  li $v0, 10      # syscall 10: kết thúc chương trình
+  syscall
+\end{codeblock}
+
+Trường hợp mẫu số bằng $0$, chương trình rẽ nhánh sang nhãn \texttt{div\_zero} để in thông báo lỗi và thoát:
+
+\begin{codeblock}[language=MIPS]
+div_zero:          # nhánh xử lý lỗi chia cho 0
+  li $v0, 4        # syscall 4: in chuỗi
+  la $a0, msg_div0 # in "Cannot divide by zero"
+  syscall
+
+  li $v0, 10       # syscall 10: kết thúc chương trình
+  syscall
+\end{codeblock}
+
+Hàm con \texttt{F} tính giá trị nguyên hàm $F(x) = \dfrac{ax^7}{7} + \dfrac{bx^6}{6} + \dfrac{cx^2}{2}$:
+
+\begin{codeblock}[language=MIPS]
+F:                      # F(x) = a*x^7/7 + b*x^6/6 + c*x^2/2
+  mul.s $f4, $f12, $f12 # $f4 = x^2
+  mul.s $f5, $f4, $f4   # $f5 = x^4
+  mul.s $f6, $f5, $f4   # $f6 = x^6
+  mul.s $f7, $f6, $f12  # $f7 = x^7
+
+  mul.s $f8, $f22, $f7  # $f8 = a * x^7
+  l.s   $f9, const7f    # $f9 = 7.0
+  div.s $f8, $f8, $f9   # $f8 = a*x^7 / 7
+
+  mul.s $f10, $f23, $f6 # $f10 = b * x^6
+  l.s   $f9, const6f    # $f9 = 6.0
+  div.s $f10, $f10, $f9 # $f10 = b*x^6 / 6
+
+  mul.s $f11, $f24, $f4 # $f11 = c * x^2
+  l.s   $f9, const2f    # $f9 = 2.0
+  div.s $f11, $f11, $f9 # $f11 = c*x^2 / 2
+
+  add.s $f0, $f8, $f10  # cộng hai số hạng đầu
+  add.s $f0, $f0, $f11  # $f0 = a*x^7/7 + b*x^6/6 + c*x^2/2
+
+  jr $ra                # trở về nơi gọi hàm
+\end{codeblock}
+
+Kết quả chạy thử nghiệm với một số testcase:
+
+\begin{codeblock}[language={}]
+Please insert u: 1
+Please insert v: 2
+Please insert a: 3
+Please insert b: 4
+Please insert c: 5
+Please insert d: 6
+Please insert e: 7
+Result: -0.063409746
+\end{codeblock}
+
+\begin{codeblock}[language={}]
+Please insert u: 1
+Please insert v: 2
+Please insert a: 3
+Please insert b: 4
+Please insert c: 5
+Please insert d: 1
+Please insert e: -1
+Cannot divide by zero
+\end{codeblock}
